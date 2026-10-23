@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المنتجات - لوحة التحكم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background: #faf8f5; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #2c3e50; margin-bottom: 15px; font-size: 20px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Cairo'; }
+        button { background: #d4af37; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: 'Cairo'; }
+        button:hover { background: #aa8c2c; }
+        .back-link { display: block; margin-top: 15px; color: #777; text-decoration: none; font-size: 13px; }
+        .dashboard { display: none; }
+        .product-item { background: #f9f9f9; border: 1px solid #eee; padding: 10px; border-radius: 8px; margin-top: 10px; text-align: right; display: flex; justify-content: space-between; align-items: center; }
+        .product-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
+        .file-label { display: block; background: #f1f2f6; padding: 12px; border: 1px dashed #cbd5e1; border-radius: 8px; margin: 8px 0; cursor: pointer; color: #475569; font-size: 14px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <!-- صفحة تسجيل الدخول -->
+    <div class="card" id="loginBox">
+        <h2>تسجيل دخول المديرة 🔐</h2>
+        <form onsubmit="login(event)">
+            <input type="text" id="username" placeholder="اسم المستخدم" required>
+            <input type="password" id="password" placeholder="كلمة المرور" required>
+            <button type="submit">دخول</button>
+        </form>
+        <a href="index.html" class="back-link">← العودة للمتجر</a>
+    </div>
+
+    <!-- لوحة إضافة المنتجات -->
+    <div class="card dashboard" id="dashBox">
+        <h2>إضافة منتج جديد 🛍️</h2>
+        <form onsubmit="addProduct(event)">
+            <input type="text" id="pName" placeholder="اسم المنتج (مثال: طقم هدايا)" required>
+            <input type="number" id="pPrice" placeholder="السعر (بالجنيه)" required>
+            
+            <label class="file-label">
+                📁 اضغط لاختيار صورة من الموبايل
+                <input type="file" id="pImgFile" accept="image/*" style="display: none;" required>
+            </label>
+            
+            <button type="submit" style="background: #27ae60;">+ إضافة للمتجر</button>
+        </form>
+
+        <h3 style="margin-top: 25px; font-size: 16px; color: #444;">المنتجات المضافة حالياً:</h3>
+        <div id="productList"></div>
+
+        <button onclick="location.reload()" style="background: #e74c3c; margin-top: 20px;">تسجيل الخروج</button>
+        <a href="index.html" class="back-link">← العودة للمتجر</a>
+    </div>
+
+    <script>
+        function login(e) {
+            e.preventDefault();
+            const u = document.getElementById('username').value.trim().toLowerCase();
+            const p = document.getElementById('password').value.trim();
+            if(u === 'habiba' && p === 'habiba1010') {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('dashBox').style.display = 'block';
+                loadProducts();
+            } else {
+                alert('اسم المستخدم أو كلمة المرور غير صحيحة');
+            }
+        }
+
+        function addProduct(e) {
+            e.preventDefault();
+            const name = document.getElementById('pName').value;
+            const price = document.getElementById('pPrice').value;
+            const fileInput = document.getElementById('pImgFile');
+
+            if(fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const imgData = event.target.result;
+                    const products = JSON.parse(localStorage.getItem('myProducts') || '[]');
+                    products.push({ name, price, img: imgData });
+                    localStorage.setItem('myProducts', JSON.stringify(products));
+
+                    alert('تمت إضافة المنتج بالصورة بنجاح! ✨');
+                    document.getElementById('pName').value = '';
+                    document.getElementById('pPrice').value = '';
+                    fileInput.value = '';
+                    loadProducts();
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
+        function loadProducts() {
+            const products = JSON.parse(localStorage.getItem('myProducts') || '[]');
+            const list = document.getElementById('productList');
+            list.innerHTML = '';
+            products.forEach((p, index) => {
+                list.innerHTML += `
+                    <div class="product-item">
+                        <img src="${p.img}" alt="${p.name}">
+                        <div>
+                            <strong>${p.name}</strong><br>
+                            <small>${p.price} جنيه</small>
+                        </div>
+                        <button onclick="deleteProduct(${index})" style="background: #ff4d4d; padding: 5px 10px; width: auto; margin:0; font-size:12px;">حذف</button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteProduct(index) {
+            const products = JSON.parse(localStorage.getItem('myProducts') || '[]');
+            products.splice(index, 1);
+            localStorage.setItem('myProducts', JSON.stringify(products));
+            loadProducts();
+        }
+    </script>
+</body>
+</html>

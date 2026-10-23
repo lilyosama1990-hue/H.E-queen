@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر الهدايا والتوزيعات المخصصة</title>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #d4af37;
+            --primary-dark: #aa8c2c;
+            --secondary: #2c3e50;
+            --light-bg: #faf8f5;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* Navbar */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-icon-btn {
+            position: relative;
+            background: #f4efe6;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--secondary);
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .cart-icon-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero Banner */
+        .hero {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #fffcf5 0%, #f7f0e1 100%);
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee4d0;
+        }
+
+        .hero h1 {
+            color: var(--secondary);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 1px solid #f0eada;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+
+        .product-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+
+        .custom-input-group {
+            margin-bottom: 15px;
+        }
+
+        .custom-input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .custom-input:focus {
+            border-color: var(--primary);
+        }
+
+        .add-to-cart-btn {
+            margin-top: auto;
+            width: 100%;
+            padding: 12px;
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Cart Drawer / Modal */
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: flex-end;
+            z-index: 1000;
+        }
+
+        .cart-modal.active {
+            display: flex;
+        }
+
+        .cart-content {
+            background: var(--white);
+            width: 100%;
+            max-width: 450px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+            animation: slideLeft 0.3s ease;
+        }
+
+        @keyframes slideLeft {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .cart-items {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        .cart-item-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .cart-item-custom {
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        .cart-item-price {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .cart-footer {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        .total-price {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 14px;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .checkout-btn:hover {
+            background: #1eb954;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-gift"></i>
+            <span>متجر الهدايا</span>
+        </div>
+        <button class="cart-icon-btn" onclick="toggleCart()">
+            <i class="fa-solid fa-shopping-bag"></i>
+            <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="hero">
+        <h1>توزيعات وهدايا مخصصة بحب 🤍</h1>
+        <p>اختر هديتك المفضلة واكتب الاسم المطلوب للتخصيص</p>
+    </section>
+
+    <!-- Products Container -->
+    <div class="container">
+        <div class="products-grid" id="productsGrid">
+            <!-- Products injected by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h3>سلة التسوق</h3>
+                <button class="close-cart" onclick="toggleCart()">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items injected by JS -->
+            </div>
+            <div class="cart-footer">
+                <div class="total-price">
+                    <span>الإجمالي:</span>
+                    <span id="totalAmount">0 ج.م</span>
+                </div>
+                
+                <div class="custom-input-group" style="margin-bottom: 10px;">
+                    <label for="customerName">اسم العميل:</label>
+                    <input type="text" id="customerName" class="custom-input" placeholder="اكتب اسمك الكامل">
+                </div>
+                <div class="custom-input-group" style="margin-bottom: 15px;">
+                    <label for="customerAddress">العنوان التفصيلي:</label>
+                    <input type="text" id="customerAddress" class="custom-input" placeholder="المدينة / الشارع">
+                </div>
+
+                <button class="checkout-btn" onclick="sendToWhatsApp()">
+                    <i class="fa-brands fa-whatsapp"></i> إرسال الطلب عبر الواتساب
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // قائمة المنتجات المعروضة
+        const products = [
+            {
+                id: 1,
+                title: "مبخرة ومباخر سبوع بالاسم الذهبي",
+                price: 17.5,
+                image: "https://via.placeholder.com/300x250/fffcf5/aa8c2c?text=مبخرة+مخصصة"
+            },
+            {
+                id: 2,
+                title: "سبحة لؤلؤ أنيقة مع كارت مخصص",
+                price: 9.0,
+                image: "https://via.placeholder.com/300x250/fffcf5/aa8c2c?text=سبحة+لؤلؤ"
+            },
+            {
+                id: 3,
+                title: "مبخرة سيراميك مع طلاء ذهبي مخصص",
+                price: 7.0,
+                image: "https://via.placeholder.com/300x250/fffcf5/aa8c2c?text=مبخرة+ذهبيه"
+            }
+        ];
+
+        let cart = [];
+
+        // عرض المنتجات في الصفحة
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.title}" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title">${product.title}</h3>
+                        <div class="product-price">${product.price} ج.م</div>
+                        <div class="custom-input-group">
+                            <label>الاسم أو العبارة المطلوبة للتخصيص:</label>
+                            <input type="text" id="custom-text-${product.id}" class="custom-input" placeholder="مثال: أحمد متولي">
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
+                            <i class="fa-solid fa-plus"></i> إضافة للسلة
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // إضافة منتج للسلة
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const customText = document.getElementById(`custom-text-${productId}`).value.trim() || "بدون اسم محدد";
+
+            cart.push({
+                ...product,
+                customText: customText
+            });
+
+            updateCartUI();
+            toggleCart();
+        }
+
+        // تحديث واجهة السلة
+        function updateCartUI() {
+            document.getElementById('cartBadge').innerText = cart.length;
+            const cartItemsContainer = document.getElementById('cartItems');
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: #888; margin-top: 50px;">السلة فارغة حالياً</p>';
+            } else {
+                cartItemsContainer.innerHTML = cart.map((item, index) => `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.title}">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.title}</div>
+                            <div class="cart-item-custom">التخصيص: ${item.customText}</div>
+                            <div class="cart-item-price">${item.price} ج.م</div>
+                        </div>
+                        <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#e74c3c; cursor:pointer;">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('totalAmount').innerText = total + " ج.م";
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCart() {
+            document.getElementById('cartModal').classList.toggle('active');
+        }
+
+        // إرسال الطلب عبر الواتساب
+        function sendToWhatsApp() {
+            if (cart.length === 0) {
+                alert("يرجى إضافة منتجات للسلة أولاً");
+                return;
+            }
+
+            const name = document.getElementById('customerName').value.trim();
+            const address = document.getElementById('customerAddress').value.trim();
+
+            if (!name || !address) {
+                alert("يرجى كتابة الاسم والعنوان لإكمال الطلب");
+                return;
+            }
+
+            // رقم الهاتف لاستقبال الطلبات (قم بتغييره للرقم المطلوب)
+            const phoneNumber = "201000000000"; 
+
+            let message = `مرحباً، أريد تأكيد طلب جديد من المتجر:\n\n`;
+            message += `👤 *اسم العميل:* ${name}\n`;
+            message += `📍 *العنوان:* ${address}\n\n`;
+            message += `🛍️ *الطلبات:*\n`;
+
+            cart.forEach((item, index) => {
+                message += `${index + 1}. *${item.title}*\n   - التخصيص: (${item.customText})\n   - السعر: ${item.price} ج.م\n`;
+            });
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            message += `\n💰 *الإجمالي:* ${total} ج.م`;
+
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+        }
+
+        // التهيئة عند الفتح
+        renderProducts();
+    </script>
+</body>
+</html>
+
