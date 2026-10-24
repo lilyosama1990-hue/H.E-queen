@@ -3,119 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة المنتجات - لوحة التحكم</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>لوحة التحكم | H.E-queen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Cairo', sans-serif; background: #faf8f5; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); width: 100%; max-width: 400px; text-align: center; }
-        h2 { color: #2c3e50; margin-bottom: 15px; font-size: 20px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Cairo'; }
-        button { background: #d4af37; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: 'Cairo'; }
-        button:hover { background: #aa8c2c; }
-        .back-link { display: block; margin-top: 15px; color: #777; text-decoration: none; font-size: 13px; }
-        .dashboard { display: none; }
-        .product-item { background: #f9f9f9; border: 1px solid #eee; padding: 10px; border-radius: 8px; margin-top: 10px; text-align: right; display: flex; justify-content: space-between; align-items: center; }
-        .product-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
-        .file-label { display: block; background: #f1f2f6; padding: 12px; border: 1px dashed #cbd5e1; border-radius: 8px; margin: 8px 0; cursor: pointer; color: #475569; font-size: 14px; text-align: center; }
+        body { background-color: #1a1a1a; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { background-color: #2b2b2b; color: #fff; border: 1px solid #d4af37; border-radius: 12px; }
+        .btn-gold { background-color: #d4af37; color: #000; font-weight: bold; }
+        .btn-gold:hover { background-color: #b59328; color: #fff; }
+        .product-img-preview { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
     </style>
 </head>
-<body>
+<body class="py-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold text-warning"><i class="fas fa-crown me-2"></i>لوحة إدارة منتجات H.E-queen</h2>
+            <a href="index.html" class="btn btn-outline-light"><i class="fas fa-store me-1"></i> الذهاب للمتجر</a>
+        </div>
 
-    <!-- صفحة تسجيل الدخول -->
-    <div class="card" id="loginBox">
-        <h2>تسجيل دخول المديرة 🔐</h2>
-        <form onsubmit="login(event)">
-            <input type="text" id="username" placeholder="اسم المستخدم" required>
-            <input type="password" id="password" placeholder="كلمة المرور" required>
-            <button type="submit">دخول</button>
-        </form>
-        <a href="index.html" class="back-link">← العودة للمتجر</a>
-    </div>
+        <div class="row g-4">
+            <!-- Form to Add Product -->
+            <div class="col-md-5">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3 text-warning"><i class="fas fa-plus-circle me-2"></i>إضافة منتج جديد</h5>
+                    <form id="addProductForm" onsubmit="saveProduct(event)">
+                        <div class="mb-3">
+                            <label class="form-label">اسم المنتج</label>
+                            <input type="text" id="pName" class="form-control" placeholder="مثال: فستان سواريه" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">السعر (ج.م)</label>
+                            <input type="number" id="pPrice" class="form-control" placeholder="مثال: 750" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">رابط الصورة (URL)</label>
+                            <input type="url" id="pImg" class="form-control" placeholder="ضع رابط الصورة هنا" required>
+                        </div>
+                        <button type="submit" class="btn btn-gold w-100 py-2"><i class="fas fa-save me-1"></i> حفظ وإضافة للمتجر</button>
+                    </form>
+                </div>
+            </div>
 
-    <!-- لوحة إضافة المنتجات -->
-    <div class="card dashboard" id="dashBox">
-        <h2>إضافة منتج جديد 🛍️</h2>
-        <form onsubmit="addProduct(event)">
-            <input type="text" id="pName" placeholder="اسم المنتج (مثال: طقم هدايا)" required>
-            <input type="number" id="pPrice" placeholder="السعر (بالجنيه)" required>
-            
-            <label class="file-label">
-                📁 اضغط لاختيار صورة من الموبايل
-                <input type="file" id="pImgFile" accept="image/*" style="display: none;" required>
-            </label>
-            
-            <button type="submit" style="background: #27ae60;">+ إضافة للمتجر</button>
-        </form>
-
-        <h3 style="margin-top: 25px; font-size: 16px; color: #444;">المنتجات المضافة حالياً:</h3>
-        <div id="productList"></div>
-
-        <button onclick="location.reload()" style="background: #e74c3c; margin-top: 20px;">تسجيل الخروج</button>
-        <a href="index.html" class="back-link">← العودة للمتجر</a>
+            <!-- List of Existing Products -->
+            <div class="col-md-7">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3 text-warning"><i class="fas fa-boxes me-2"></i>المنتجات الحالية</h5>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>الصورة</th>
+                                    <th>الاسم</th>
+                                    <th>السعر</th>
+                                    <th>إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminProductsList">
+                                <!-- Products loaded via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        function login(e) {
-            e.preventDefault();
-            const u = document.getElementById('username').value.trim().toLowerCase();
-            const p = document.getElementById('password').value.trim();
-            if(u === 'habiba' && p === 'habiba1010') {
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('dashBox').style.display = 'block';
-                loadProducts();
-            } else {
-                alert('اسم المستخدم أو كلمة المرور غير صحيحة');
+        const defaultProducts = [
+            { id: 1, name: "فستان سهرة أنيق", price: 850, img: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=500" },
+            { id: 2, name: "عباية مودرن شيك", price: 650, img: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=500" },
+            { id: 3, name: "بلوزة حرير راقية", price: 420, img: "https://images.unsplash.com/photo-1604014237800-1c9102c219da?q=80&w=500" },
+            { id: 4, name: "طقم كاجوال كامل", price: 950, img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=500" }
+        ];
+
+        function getProducts() {
+            const stored = localStorage.getItem('he_queen_custom_products');
+            if (!stored) {
+                localStorage.setItem('he_queen_custom_products', JSON.stringify(defaultProducts));
+                return defaultProducts;
             }
+            return JSON.parse(stored);
         }
 
-        function addProduct(e) {
-            e.preventDefault();
-            const name = document.getElementById('pName').value;
-            const price = document.getElementById('pPrice').value;
-            const fileInput = document.getElementById('pImgFile');
-
-            if(fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const imgData = event.target.result;
-                    const products = JSON.parse(localStorage.getItem('myProducts') || '[]');
-                    products.push({ name, price, img: imgData });
-                    localStorage.setItem('myProducts', JSON.stringify(products));
-
-                    alert('تمت إضافة المنتج بالصورة بنجاح! ✨');
-                    document.getElementById('pName').value = '';
-                    document.getElementById('pPrice').value = '';
-                    fileInput.value = '';
-                    loadProducts();
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            }
+        function renderAdminProducts() {
+            const products = getProducts();
+            const tbody = document.getElementById('adminProductsList');
+            tbody.innerHTML = products.map((p, index) => `
+                <tr>
+                    <td><img src="${p.img}" class="product-img-preview" alt="${p.name}"></td>
+                    <td>${p.name}</td>
+                    <td>${p.price} ج.م</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${index})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        function loadProducts() {
-            const products = JSON.parse(localStorage.getItem('myProducts') || '[]');
-            const list = document.getElementById('productList');
-            list.innerHTML = '';
-            products.forEach((p, index) => {
-                list.innerHTML += `
-                    <div class="product-item">
-                        <img src="${p.img}" alt="${p.name}">
-                        <div>
-                            <strong>${p.name}</strong><br>
-                            <small>${p.price} جنيه</small>
-                        </div>
-                        <button onclick="deleteProduct(${index})" style="background: #ff4d4d; padding: 5px 10px; width: auto; margin:0; font-size:12px;">حذف</button>
-                    </div>
-                `;
-            });
+        function saveProduct(e) {
+            e.preventDefault();
+            const name = document.getElementById('pName').value.trim();
+            const price = parseFloat(document.getElementById('pPrice').value);
+            const img = document.getElementById('pImg').value.trim();
+
+            const products = getProducts();
+            products.push({ id: Date.now(), name, price, img });
+            localStorage.setItem('he_queen_custom_products', JSON.stringify(products));
+
+            document.getElementById('addProductForm').reset();
+            renderAdminProducts();
+            alert('تمت إضافة المنتج بنجاح ومزامنته مع المتجر!');
         }
 
         function deleteProduct(index) {
-            const products = JSON.parse(localStorage.getItem('myProducts') || '[]');
-            products.splice(index, 1);
-            localStorage.setItem('myProducts', JSON.stringify(products));
-            loadProducts();
+            if (confirm('هل أنت تأكد من حذف هذا المنتج؟')) {
+                const products = getProducts();
+                products.splice(index, 1);
+                localStorage.setItem('he_queen_custom_products', JSON.stringify(products));
+                renderAdminProducts();
+            }
         }
+
+        renderAdminProducts();
     </script>
 </body>
 </html>
