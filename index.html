@@ -20,6 +20,7 @@
         .cart-badge { background-color: var(--primary-color); color: #fff; }
         .btn-login { border: 1px solid var(--primary-color); color: var(--primary-color); font-size: 0.85rem; padding: 4px 10px; border-radius: 6px; }
         .btn-login:hover { background-color: var(--primary-color); color: #000; }
+        .user-welcome { color: var(--primary-color); font-weight: bold; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -29,10 +30,10 @@
         <div class="container d-flex justify-content-between align-items-center px-3">
             <a class="navbar-brand m-0" href="#"><i class="fas fa-crown me-1"></i>H.E-queen</a>
             
-            <div class="d-flex align-items-center gap-2">
-                <!-- زر تسجيل الدخول للمديرة -->
-                <button class="btn btn-login" data-bs-toggle="modal" data-bs-target="#loginModal">
-                    <i class="fas fa-user-shield me-1"></i> دخول
+            <div class="d-flex align-items-center gap-2" id="navAuthArea">
+                <!-- زر الدخول والإنشاء سيتحمل ديناميكياً -->
+                <button class="btn btn-login" data-bs-toggle="modal" data-bs-target="#authModal">
+                    <i class="fas fa-user me-1"></i> دخول / تسجيل
                 </button>
                 
                 <!-- زر السلة -->
@@ -58,26 +59,53 @@
         </div>
     </div>
 
-    <!-- Admin Login Modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+    <!-- Multi-User Auth Modal (Login / Register) -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark text-white border-warning">
                 <div class="modal-header border-secondary">
-                    <h5 class="modal-title text-warning"><i class="fas fa-lock me-2"></i>تسجيل دخول المديرة</h5>
+                    <ul class="nav nav-pills card-header-pills" id="authTabs">
+                        <li class="nav-item">
+                            <button class="nav-link active btn-sm text-warning" id="tab-login" onclick="switchAuthTab('login')">تسجيل الدخول</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link btn-sm text-white" id="tab-register" onclick="switchAuthTab('register')">حساب جديد</button>
+                        </li>
+                    </ul>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
-                    <form onsubmit="handleAdminLogin(event)">
+                    <!-- Form 1: Login -->
+                    <form id="loginForm" onsubmit="handleLogin(event)">
                         <div class="mb-3">
-                            <label class="form-label">اسم المستخدم</label>
-                            <input type="text" id="adminUser" class="form-control" placeholder="أدخل اسم المستخدم" required>
+                            <label class="form-label small">اسم المستخدم</label>
+                            <input type="text" id="loginUser" class="form-control form-control-sm" placeholder="أدخل اسم المستخدم" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">كلمة المرور</label>
-                            <input type="password" id="adminPass" class="form-control" placeholder="أدخل كلمة المرور" required>
+                            <label class="form-label small">كلمة المرور</label>
+                            <input type="password" id="loginPass" class="form-control form-control-sm" placeholder="أدخل كلمة المرور" required>
                         </div>
-                        <div id="loginError" class="text-danger small mb-3" style="display:none;">اسم المستخدم أو كلمة المرور غير صحيحة!</div>
-                        <button type="submit" class="btn btn-warning w-100 fw-bold">دخول لصفحة الإدارة</button>
+                        <div id="loginError" class="text-danger small mb-2" style="display:none;">اسم المستخدم أو كلمة المرور غير صحيحة!</div>
+                        <button type="submit" class="btn btn-warning btn-sm w-100 fw-bold">تسجيل الدخول</button>
+                    </form>
+
+                    <!-- Form 2: Register -->
+                    <form id="registerForm" onsubmit="handleRegister(event)" style="display:none;">
+                        <div class="mb-3">
+                            <label class="form-label small">الاسم بالكامل</label>
+                            <input type="text" id="regName" class="form-control form-control-sm" placeholder="مثال: حبيبة أحمد" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small">اسم المستخدم (للتسجيل)</label>
+                            <input type="text" id="regUser" class="form-control form-control-sm" placeholder="اختر اسم مستخدم" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small">كلمة المرور</label>
+                            <input type="password" id="regPass" class="form-control form-control-sm" placeholder="كلمة المرور" required>
+                        </div>
+                        <div id="regMsg" class="small mb-2"></div>
+                        <button type="submit" class="btn btn-success btn-sm w-100 fw-bold">إنشاء حساب جديد</button>
                     </form>
                 </div>
             </div>
@@ -148,6 +176,95 @@
         }
 
         let cart = JSON.parse(localStorage.getItem('he_queen_cart')) || [];
+        let users = JSON.parse(localStorage.getItem('he_queen_users')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('he_queen_current_user')) || null;
+
+        function checkUserStatus() {
+            const area = document.getElementById('navAuthArea');
+            if (currentUser) {
+                let adminBtn = currentUser.user === "habiba" ? `<a href="admin.html" class="btn btn-sm btn-warning fw-bold me-1">🔓 لوحة الإدارة</a>` : '';
+                area.innerHTML = `
+                    <span class="user-welcome">أهلاً ${currentUser.name}</span>
+                    ${adminBtn}
+                    <button class="btn btn-outline-danger btn-sm p-1" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+                    <button class="btn btn-outline-light btn-sm position-relative ms-1" data-bs-toggle="modal" data-bs-target="#cartModal">
+                        <i class="fas fa-shopping-bag fs-6"></i>
+                        <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge">0</span>
+                    </button>
+                `;
+            }
+        }
+
+        function switchAuthTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('tab-login').classList.add('active', 'text-warning');
+                document.getElementById('tab-register').classList.remove('active', 'text-warning');
+            } else {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'block';
+                document.getElementById('tab-register').classList.add('active', 'text-warning');
+                document.getElementById('tab-login').classList.remove('active', 'text-warning');
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const user = document.getElementById('regUser').value.trim();
+            const pass = document.getElementById('regPass').value.trim();
+            const msg = document.getElementById('regMsg');
+
+            if (user === 'habiba') {
+                msg.className = "text-danger small mb-2";
+                msg.innerText = "اسم المستخدم هذا محجوز للمديرة فقط!";
+                return;
+            }
+
+            if (users.find(u => u.user === user)) {
+                msg.className = "text-danger small mb-2";
+                msg.innerText = "اسم المستخدم موجود بالفعل! اختر اسماً آخر.";
+                return;
+            }
+
+            users.push({ name, user, pass });
+            localStorage.setItem('he_queen_users', JSON.stringify(users));
+
+            msg.className = "text-success small mb-2";
+            msg.innerText = "تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.";
+            setTimeout(() => switchAuthTab('login'), 1500);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const errorDiv = document.getElementById('loginError');
+
+            // 🔓 الدخول كمديرة (حبيبة)
+            if (user === "habiba" && pass === "habiba1010") {
+                currentUser = { name: "المديرة حبيبة", user: "habiba" };
+                localStorage.setItem('he_queen_current_user', JSON.stringify(currentUser));
+                window.location.href = "admin.html";
+                return;
+            }
+
+            // الدخول كعميل عادي
+            const foundUser = users.find(u => u.user === user && u.pass === pass);
+            if (foundUser) {
+                currentUser = foundUser;
+                localStorage.setItem('he_queen_current_user', JSON.stringify(currentUser));
+                location.reload();
+            } else {
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('he_queen_current_user');
+            location.reload();
+        }
 
         function renderProducts() {
             const products = getProducts();
@@ -182,19 +299,6 @@
                     </div>
                 </div>
             `).join('');
-        }
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const user = document.getElementById('adminUser').value.trim();
-            const pass = document.getElementById('adminPass').value.trim();
-            const errorDiv = document.getElementById('loginError');
-
-            if (user === "habiba" && pass === "habiba1010") {
-                window.location.href = "admin.html";
-            } else {
-                errorDiv.style.display = 'block';
-            }
         }
 
         function addToCart(productId) {
@@ -306,6 +410,7 @@
             window.open(url, '_blank');
         }
 
+        checkUserStatus();
         renderProducts();
         saveAndRenderCart();
     </script>
