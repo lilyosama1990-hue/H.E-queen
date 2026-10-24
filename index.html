@@ -24,12 +24,21 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container">
+        <div class="container d-flex justify-content-between align-items-center">
             <a class="navbar-brand" href="#"><i class="fas fa-crown me-2"></i>H.E-queen</a>
-            <button class="btn btn-outline-light position-relative" data-bs-toggle="modal" data-bs-target="#cartModal">
-                <i class="fas fa-shopping-bag fs-5"></i>
-                <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge">0</span>
-            </button>
+            
+            <div class="d-flex align-items-center gap-2">
+                <!-- زر دخول المديرة -->
+                <button class="btn btn-sm btn-outline-warning text-white border-warning" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <i class="fas fa-user-shield me-1"></i> تسجيل الدخول
+                </button>
+                
+                <!-- زر السلة -->
+                <button class="btn btn-outline-light position-relative" data-bs-toggle="modal" data-bs-target="#cartModal">
+                    <i class="fas fa-shopping-bag fs-5"></i>
+                    <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge">0</span>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -44,6 +53,32 @@
         <h3 class="fw-bold mb-4 border-bottom pb-2">منتجاتنا المميزة</h3>
         <div class="row g-4" id="productsContainer">
             <!-- Products will load dynamically -->
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-warning">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title text-warning"><i class="fas fa-lock me-2"></i>تسجيل دخول المديرة</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="handleAdminLogin(event)">
+                        <div class="mb-3">
+                            <label class="form-label">اسم المستخدم</label>
+                            <input type="text" id="adminUser" class="form-control" placeholder="أدخل اسم المستخدم" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">كلمة المرور</label>
+                            <input type="password" id="adminPass" class="form-control" placeholder="أدخل كلمة المرور" required>
+                        </div>
+                        <div id="loginError" class="text-danger small mb-3" style="display:none;">اسم المستخدم أو كلمة المرور غير صحيحة!</div>
+                        <button type="submit" class="btn btn-warning w-100 fw-bold">دخول لصفحة الإدارة</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -71,7 +106,7 @@
                                 <select id="custGov" class="form-select" onchange="updateShippingCost()">
                                     <option value="50">القاهرة والجيزة (شحن 50 ج.م)</option>
                                     <option value="60">الإسكندرية والوجه البحري (شحن 60 ج.م)</option>
-                                    <option value="70">الصعيد والمافظات النائية (شحن 70 ج.م)</option>
+                                    <option value="70">الصعيد والمحافظات النائية (شحن 70 ج.م)</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -145,6 +180,19 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('adminUser').value.trim();
+            const pass = document.getElementById('adminPass').value.trim();
+            const errorDiv = document.getElementById('loginError');
+
+            if (user === "habiba" && pass === "habiba1010") {
+                window.location.href = "admin.html";
+            } else {
+                errorDiv.style.display = 'block';
+            }
         }
 
         function addToCart(productId) {
