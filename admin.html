@@ -17,50 +17,68 @@
 <body class="py-4">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold text-warning"><i class="fas fa-crown me-2"></i>لوحة إدارة منتجات H.E-queen</h2>
-            <a href="index.html" class="btn btn-outline-light"><i class="fas fa-store me-1"></i> الذهاب للمتجر</a>
+            <h2 class="fw-bold text-warning"><i class="fas fa-crown me-2"></i>لوحة إدارة H.E-queen</h2>
+            <a href="index.html" class="btn btn-outline-light btn-sm"><i class="fas fa-store me-1"></i> المتجر</a>
         </div>
 
         <div class="row g-4">
-            <!-- Form to Add Product -->
+            <!-- 1. تعديل البانر والكلمات -->
             <div class="col-md-5">
-                <div class="card p-4">
+                <div class="card p-3 mb-4 border-info">
+                    <h5 class="fw-bold mb-3 text-info"><i class="fas fa-image me-2"></i>تعديل الغلاف العالي (البانر)</h5>
+                    <form onsubmit="saveBanner(event)">
+                        <div class="mb-2">
+                            <label class="form-label small">العنوان الرئيسي</label>
+                            <input type="text" id="bTitle" class="form-control form-control-sm" placeholder="أحدث صيحات الموضة والأنقاة">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small">الوصف الفرعي</label>
+                            <input type="text" id="bDesc" class="form-control form-control-sm" placeholder="تسوقي أحدث التشكيلات حصرياً من H.E-queen">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small">اختر صورة الغلاف من الاستوديو</label>
+                            <input type="file" id="bImgFile" class="form-control form-control-sm" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-info btn-sm w-100 fw-bold text-dark">حفظ تعديلات الغلاف</button>
+                    </form>
+                </div>
+
+                <!-- 2. إضافة منتج جديد -->
+                <div class="card p-3">
                     <h5 class="fw-bold mb-3 text-warning"><i class="fas fa-plus-circle me-2"></i>إضافة منتج جديد</h5>
                     <form id="addProductForm" onsubmit="saveProduct(event)">
-                        <div class="mb-3">
-                            <label class="form-label">اسم المنتج</label>
-                            <input type="text" id="pName" class="form-control" placeholder="مثال: فستان سواريه" required>
+                        <div class="mb-2">
+                            <label class="form-label small">اسم المنتج</label>
+                            <input type="text" id="pName" class="form-control form-control-sm" placeholder="مثال: فستان سواريه" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small">السعر (ج.م)</label>
+                            <input type="number" id="pPrice" class="form-control form-control-sm" placeholder="مثال: 750" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">السعر (ج.م)</label>
-                            <input type="number" id="pPrice" class="form-control" placeholder="مثال: 750" required>
+                            <label class="form-label small">اختر صورة المنتج من الاستوديو/المعرض</label>
+                            <input type="file" id="pImgFile" class="form-control form-control-sm" accept="image/*" required>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">رابط الصورة (URL)</label>
-                            <input type="url" id="pImg" class="form-control" placeholder="ضع رابط الصورة هنا" required>
-                        </div>
-                        <button type="submit" class="btn btn-gold w-100 py-2"><i class="fas fa-save me-1"></i> حفظ وإضافة للمتجر</button>
+                        <button type="submit" class="btn btn-gold btn-sm w-100 py-2"><i class="fas fa-save me-1"></i> حفظ وإضافة للمتجر</button>
                     </form>
                 </div>
             </div>
 
-            <!-- List of Existing Products -->
+            <!-- قائمة المنتجات الحالية -->
             <div class="col-md-7">
-                <div class="card p-4">
+                <div class="card p-3">
                     <h5 class="fw-bold mb-3 text-warning"><i class="fas fa-boxes me-2"></i>المنتجات الحالية</h5>
                     <div class="table-responsive">
-                        <table class="table table-dark table-hover align-middle">
+                        <table class="table table-dark table-hover align-middle small">
                             <thead>
                                 <tr>
                                     <th>الصورة</th>
                                     <th>الاسم</th>
                                     <th>السعر</th>
-                                    <th>إجراء</th>
+                                    <th>حذف</th>
                                 </tr>
                             </thead>
-                            <tbody id="adminProductsList">
-                                <!-- Products loaded via JS -->
-                            </tbody>
+                            <tbody id="adminProductsList"></tbody>
                         </table>
                     </div>
                 </div>
@@ -71,18 +89,12 @@
     <script>
         const defaultProducts = [
             { id: 1, name: "فستان سهرة أنيق", price: 850, img: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=500" },
-            { id: 2, name: "عباية مودرن شيك", price: 650, img: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=500" },
-            { id: 3, name: "بلوزة حرير راقية", price: 420, img: "https://images.unsplash.com/photo-1604014237800-1c9102c219da?q=80&w=500" },
-            { id: 4, name: "طقم كاجوال كامل", price: 950, img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=500" }
+            { id: 2, name: "عباية مودرن شيك", price: 650, img: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=500" }
         ];
 
         function getProducts() {
             const stored = localStorage.getItem('he_queen_custom_products');
-            if (!stored) {
-                localStorage.setItem('he_queen_custom_products', JSON.stringify(defaultProducts));
-                return defaultProducts;
-            }
-            return JSON.parse(stored);
+            return stored ? JSON.parse(stored) : defaultProducts;
         }
 
         function renderAdminProducts() {
@@ -100,19 +112,50 @@
             `).join('');
         }
 
+        function saveBanner(e) {
+            e.preventDefault();
+            const title = document.getElementById('bTitle').value.trim();
+            const desc = document.getElementById('bDesc').value.trim();
+            const fileInput = document.getElementById('bImgFile');
+
+            let bannerData = JSON.parse(localStorage.getItem('he_queen_banner')) || {};
+            if (title) bannerData.title = title;
+            if (desc) bannerData.desc = desc;
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    bannerData.img = e.target.result;
+                    localStorage.setItem('he_queen_banner', JSON.stringify(bannerData));
+                    alert('تم حفظ تعديلات الغلاف بنجاح!');
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                localStorage.setItem('he_queen_banner', JSON.stringify(bannerData));
+                alert('تم حفظ النصوص بنجاح!');
+            }
+        }
+
         function saveProduct(e) {
             e.preventDefault();
             const name = document.getElementById('pName').value.trim();
             const price = parseFloat(document.getElementById('pPrice').value);
-            const img = document.getElementById('pImg').value.trim();
+            const fileInput = document.getElementById('pImgFile');
 
-            const products = getProducts();
-            products.push({ id: Date.now(), name, price, img });
-            localStorage.setItem('he_queen_custom_products', JSON.stringify(products));
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgBase64 = e.target.result;
+                    const products = getProducts();
+                    products.push({ id: Date.now(), name, price, img: imgBase64 });
+                    localStorage.setItem('he_queen_custom_products', JSON.stringify(products));
 
-            document.getElementById('addProductForm').reset();
-            renderAdminProducts();
-            alert('تمت إضافة المنتج بنجاح ومزامنته مع المتجر!');
+                    document.getElementById('addProductForm').reset();
+                    renderAdminProducts();
+                    alert('تمت إضافة المنتج بنجاح مع صوته!');
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
         }
 
         function deleteProduct(index) {
