@@ -11,7 +11,19 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; color: #333; }
         .navbar { background-color: var(--secondary-color); border-bottom: 2px solid var(--primary-color); padding: 10px 0; }
         .navbar-brand { color: var(--primary-color) !important; font-weight: bold; font-size: 1.3rem; }
-        .hero-banner { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1000') center/cover; color: #fff; text-align: center; padding: 50px 15px; margin-bottom: 25px; border-radius: 0 0 15px 15px; }
+        
+        /* البانر الجديد باستخدام صورة QUEEN */
+        .hero-banner { 
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://raw.githubusercontent.com/lilyosama1990-hue/H.E-queen/main/banner.jpg') center/contain no-repeat #f3f3f0; 
+            min-height: 250px; 
+            color: #fff; 
+            text-align: center; 
+            padding: 40px 15px; 
+            margin-bottom: 25px; 
+            border-radius: 0 0 15px 15px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
         .product-card { border: none; border-radius: 12px; transition: transform 0.3s; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .product-card:hover { transform: translateY(-5px); }
         .product-img { height: 240px; object-fit: cover; border-radius: 12px 12px 0 0; }
@@ -31,12 +43,10 @@
             <a class="navbar-brand m-0" href="#"><i class="fas fa-crown me-1"></i>H.E-queen</a>
             
             <div class="d-flex align-items-center gap-2" id="navAuthArea">
-                <!-- زر الدخول والإنشاء سيتحمل ديناميكياً -->
                 <button class="btn btn-login" data-bs-toggle="modal" data-bs-target="#authModal">
                     <i class="fas fa-user me-1"></i> دخول / تسجيل
                 </button>
                 
-                <!-- زر السلة -->
                 <button class="btn btn-outline-light btn-sm position-relative" data-bs-toggle="modal" data-bs-target="#cartModal">
                     <i class="fas fa-shopping-bag fs-6"></i>
                     <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge">0</span>
@@ -45,21 +55,21 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <div class="hero-banner">
-        <h1 class="h3 fw-bold">أحدث صيحات الموضة والأناقة</h1>
-        <p class="lead fs-6">تسوقي أحدث التشكيلات حصرياً من H.E-queen</p>
+    <!-- Hero Section Banner -->
+    <div class="hero-banner" id="heroBanner">
+        <div class="bg-dark bg-opacity-50 p-3 rounded d-inline-block">
+            <h1 class="h4 fw-bold mb-1" id="heroTitle">QUEEN | فن الكونكريت</h1>
+            <p class="lead fs-6 mb-0" id="heroDesc">أرقى التشكيلات والديكورات الحصرية - م/ حبيبة وائل</p>
+        </div>
     </div>
 
     <!-- Products Grid -->
     <div class="container mb-5">
         <h4 class="fw-bold mb-3 border-bottom pb-2">منتجاتنا المميزة</h4>
-        <div class="row g-3" id="productsContainer">
-            <!-- Products will load dynamically -->
-        </div>
+        <div class="row g-3" id="productsContainer"></div>
     </div>
 
-    <!-- Multi-User Auth Modal (Login / Register) -->
+    <!-- Auth Modal (Clean & Simple) -->
     <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark text-white border-warning">
@@ -69,14 +79,13 @@
                             <button class="nav-link active btn-sm text-warning" id="tab-login" onclick="switchAuthTab('login')">تسجيل الدخول</button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link btn-sm text-white" id="tab-register" onclick="switchAuthTab('register')">حساب جديد</button>
+                            <button class="nav-link btn-sm text-white" id="tab-register" onclick="switchAuthTab('register')">إنشاء حساب</button>
                         </li>
                     </ul>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body">
-                    <!-- Form 1: Login -->
                     <form id="loginForm" onsubmit="handleLogin(event)">
                         <div class="mb-3">
                             <label class="form-label small">اسم المستخدم</label>
@@ -90,14 +99,13 @@
                         <button type="submit" class="btn btn-warning btn-sm w-100 fw-bold">تسجيل الدخول</button>
                     </form>
 
-                    <!-- Form 2: Register -->
                     <form id="registerForm" onsubmit="handleRegister(event)" style="display:none;">
                         <div class="mb-3">
                             <label class="form-label small">الاسم بالكامل</label>
-                            <input type="text" id="regName" class="form-control form-control-sm" placeholder="مثال: حبيبة أحمد" required>
+                            <input type="text" id="regName" class="form-control form-control-sm" placeholder="الاسم بالكامل" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small">اسم المستخدم (للتسجيل)</label>
+                            <label class="form-label small">اسم المستخدم</label>
                             <input type="text" id="regUser" class="form-control form-control-sm" placeholder="اختر اسم مستخدم" required>
                         </div>
                         <div class="mb-3">
@@ -105,7 +113,7 @@
                             <input type="password" id="regPass" class="form-control form-control-sm" placeholder="كلمة المرور" required>
                         </div>
                         <div id="regMsg" class="small mb-2"></div>
-                        <button type="submit" class="btn btn-success btn-sm w-100 fw-bold">إنشاء حساب جديد</button>
+                        <button type="submit" class="btn btn-success btn-sm w-100 fw-bold">إنشاء حساب</button>
                     </form>
                 </div>
             </div>
@@ -165,9 +173,7 @@
 
         const defaultProducts = [
             { id: 1, name: "فستان سهرة أنيق", price: 850, img: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=500" },
-            { id: 2, name: "عباية مودرن شيك", price: 650, img: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=500" },
-            { id: 3, name: "بلوزة حرير راقية", price: 420, img: "https://images.unsplash.com/photo-1604014237800-1c9102c219da?q=80&w=500" },
-            { id: 4, name: "طقم كاجوال كامل", price: 950, img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=500" }
+            { id: 2, name: "عباية مودرن شيك", price: 650, img: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=500" }
         ];
 
         function getProducts() {
@@ -178,6 +184,17 @@
         let cart = JSON.parse(localStorage.getItem('he_queen_cart')) || [];
         let users = JSON.parse(localStorage.getItem('he_queen_users')) || [];
         let currentUser = JSON.parse(localStorage.getItem('he_queen_current_user')) || null;
+
+        function loadBanner() {
+            const bannerData = JSON.parse(localStorage.getItem('he_queen_banner'));
+            if (bannerData) {
+                if (bannerData.title) document.getElementById('heroTitle').innerText = bannerData.title;
+                if (bannerData.desc) document.getElementById('heroDesc').innerText = bannerData.desc;
+                if (bannerData.img) {
+                    document.getElementById('heroBanner').style.background = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${bannerData.img}') center/contain no-repeat #f3f3f0`;
+                }
+            }
+        }
 
         function checkUserStatus() {
             const area = document.getElementById('navAuthArea');
@@ -218,13 +235,13 @@
 
             if (user === 'habiba') {
                 msg.className = "text-danger small mb-2";
-                msg.innerText = "اسم المستخدم هذا محجوز للمديرة فقط!";
+                msg.innerText = "اسم المستخدم هذا محجوز!";
                 return;
             }
 
             if (users.find(u => u.user === user)) {
                 msg.className = "text-danger small mb-2";
-                msg.innerText = "اسم المستخدم موجود بالفعل! اختر اسماً آخر.";
+                msg.innerText = "اسم المستخدم موجود بالفعل!";
                 return;
             }
 
@@ -232,8 +249,8 @@
             localStorage.setItem('he_queen_users', JSON.stringify(users));
 
             msg.className = "text-success small mb-2";
-            msg.innerText = "تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.";
-            setTimeout(() => switchAuthTab('login'), 1500);
+            msg.innerText = "تم إنشاء الحساب بنجاح!";
+            setTimeout(() => switchAuthTab('login'), 1200);
         }
 
         function handleLogin(e) {
@@ -242,7 +259,6 @@
             const pass = document.getElementById('loginPass').value.trim();
             const errorDiv = document.getElementById('loginError');
 
-            // 🔓 الدخول كمديرة (حبيبة)
             if (user === "habiba" && pass === "habiba1010") {
                 currentUser = { name: "المديرة حبيبة", user: "habiba" };
                 localStorage.setItem('he_queen_current_user', JSON.stringify(currentUser));
@@ -250,7 +266,6 @@
                 return;
             }
 
-            // الدخول كعميل عادي
             const foundUser = users.find(u => u.user === user && u.pass === pass);
             if (foundUser) {
                 currentUser = foundUser;
@@ -357,7 +372,7 @@
                             <button class="btn btn-sm btn-outline-secondary" onclick="changeQty(${index}, -1)">-</button>
                             <span class="fw-bold">${item.qty}</span>
                             <button class="btn btn-sm btn-outline-secondary" onclick="changeQty(${index}, 1)">+</button>
-                            <span class="fw-bold ms-3">${itemTotal} ج.م</span>
+                            <span class="fw-bold ms-3">${itemTotal} ج.m</span>
                         </div>
                     </li>
                 `;
@@ -410,6 +425,7 @@
             window.open(url, '_blank');
         }
 
+        loadBanner();
         checkUserStatus();
         renderProducts();
         saveAndRenderCart();
