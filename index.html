@@ -431,3 +431,448 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>H.E-queen Store</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --primary-green: #2e7d32;
+      --light-green: #e8f5e9;
+      --dark-green: #1b5e20;
+      --text-color: #212121;
+      --gray-light: #f5f5f5;
+      --gray-border: #e0e0e0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding-bottom: 70px;
+    }
+
+    /* Header Navigation */
+    header {
+      background-color: var(--bg-color);
+      border-bottom: 2px solid var(--light-green);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--primary-green);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lang-btn {
+      background-color: var(--light-green);
+      color: var(--primary-green);
+      border: 1px solid var(--primary-green);
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .lang-btn:hover {
+      background-color: var(--primary-green);
+      color: #fff;
+    }
+
+    /* Hero Banner */
+    .hero {
+      background: linear-gradient(135deg, var(--light-green), #ffffff);
+      padding: 40px 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    .hero h1 {
+      color: var(--dark-green);
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: #555;
+      font-size: 16px;
+    }
+
+    /* Products Section */
+    .container {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      color: var(--primary-green);
+      margin-bottom: 15px;
+      border-right: 4px solid var(--primary-green);
+      padding-right: 10px;
+    }
+
+    html[dir="ltr"] .section-title {
+      border-right: none;
+      border-left: 4px solid var(--primary-green);
+      padding-left: 10px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: #fff;
+      border: 1px solid var(--gray-border);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.15);
+      border-color: var(--primary-green);
+    }
+
+    .product-img {
+      width: 100%;
+      height: 180px;
+      background-color: var(--gray-light);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-green);
+      font-size: 40px;
+    }
+
+    .product-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .product-price {
+      color: var(--primary-green);
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .btn-add {
+      background-color: var(--primary-green);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .btn-add:hover {
+      background-color: var(--dark-green);
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      border-top: 1px solid var(--gray-border);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 1000;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #666;
+      text-decoration: none;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .nav-item i {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .nav-item.active, .nav-item:hover {
+      color: var(--primary-green);
+    }
+
+    /* Modals */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #888;
+    }
+
+    html[dir="ltr"] .close-btn {
+      left: auto;
+      right: 15px;
+    }
+
+    .google-btn {
+      background-color: #ffffff;
+      border: 1px solid var(--gray-border);
+      padding: 10px;
+      border-radius: 6px;
+      width: 100%;
+      margin-top: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: bold;
+    }
+
+    .google-btn:hover {
+      background-color: var(--gray-light);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <i class="fas fa-crown"></i> H.E-queen
+    </div>
+    <button class="lang-btn" id="langToggle" onclick="toggleLanguage()">English</button>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1 id="heroTitle">مرحباً بكم في متجر H.E-queen</h1>
+    <p id="heroDesc">أفضل المنتجات العصرية بين يديك بأعلى جودة وأنسب سعر.</p>
+  </section>
+
+  <!-- Products Container -->
+  <div class="container">
+    <h2 class="section-title" id="productsTitle">المنتجات المتاحة</h2>
+    <div class="product-grid">
+      
+      <!-- Product Card 1 -->
+      <div class="product-card">
+        <div class="product-img"><i class="fas fa-box-open"></i></div>
+        <div class="product-title" id="p1Title">منتج رقم 1</div>
+        <div class="product-price">250 EGP</div>
+        <button class="btn-add" id="p1Btn">إضافة للسلة</button>
+      </div>
+
+      <!-- Product Card 2 -->
+      <div class="product-card">
+        <div class="product-img"><i class="fas fa-gift"></i></div>
+        <div class="product-title" id="p2Title">منتج رقم 2</div>
+        <div class="product-price">400 EGP</div>
+        <button class="btn-add" id="p2Btn">إضافة للسلة</button>
+      </div>
+
+      <!-- Product Card 3 -->
+      <div class="product-card">
+        <div class="product-img"><i class="fas fa-gem"></i></div>
+        <div class="product-title" id="p3Title">منتج رقم 3</div>
+        <div class="product-price">650 EGP</div>
+        <button class="btn-add" id="p3Btn">إضافة للسلة</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <i class="fas fa-home"></i>
+      <span id="navHome">الرئيسية</span>
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-shopping-bag"></i>
+      <span id="navProducts">المنتجات</span>
+    </div>
+    <div class="nav-item" onclick="openModal('contactModal')">
+      <i class="fas fa-envelope"></i>
+      <span id="navContact">تواصل معنا</span>
+    </div>
+    <div class="nav-item" onclick="openModal('accountModal')">
+      <i class="fas fa-user"></i>
+      <span id="navAccount">حسابي</span>
+    </div>
+  </nav>
+
+  <!-- Account Modal (Gmail Sign In) -->
+  <div class="modal" id="accountModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('accountModal')">&times;</span>
+      <h3 id="accountTitle" style="color: var(--primary-green); margin-bottom: 10px;">إنشاء حساب / دخول</h3>
+      <p id="accountDesc" style="color: #666; font-size: 14px;">سجل دخولك الآن للحصول على أفضل العروض</p>
+      <button class="google-btn">
+        <i class="fab fa-google" style="color: #db4437;"></i>
+        <span id="googleBtnText">تسجيل الدخول باستخدام Gmail</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Contact Modal -->
+  <div class="modal" id="contactModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('contactModal')">&times;</span>
+      <h3 id="contactTitle" style="color: var(--primary-green); margin-bottom: 10px;">تواصل معنا</h3>
+      <p id="contactDesc" style="color: #666; font-size: 14px;">يسعدنا تواصلكم معنا في أي وقت عبر الوسائل التالية:</p>
+      <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+        <p><i class="fas fa-phone" style="color: var(--primary-green);"></i> +20 123 456 789</p>
+        <p><i class="fas fa-envelope" style="color: var(--primary-green);"></i> support@hequeen.com</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    let currentLang = 'ar';
+
+    const translations = {
+      ar: {
+        langBtn: 'English',
+        heroTitle: 'مرحباً بكم في متجر H.E-queen',
+        heroDesc: 'أفضل المنتجات العصرية بين يديك بأعلى جودة وأنسب سعر.',
+        productsTitle: 'المنتجات المتاحة',
+        p1Title: 'منتج رقم 1',
+        p2Title: 'منتج رقم 2',
+        p3Title: 'منتج رقم 3',
+        pBtn: 'إضافة للسلة',
+        navHome: 'الرئيسية',
+        navProducts: 'المنتجات',
+        navContact: 'تواصل معنا',
+        navAccount: 'حسابي',
+        accountTitle: 'إنشاء حساب / دخول',
+        accountDesc: 'سجل دخولك الآن للحصول على أفضل العروض',
+        googleBtnText: 'تسجيل الدخول باستخدام Gmail',
+        contactTitle: 'تواصل معنا',
+        contactDesc: 'يسعدنا تواصلكم معنا في أي وقت عبر الوسائل التالية:'
+      },
+      en: {
+        langBtn: 'عربي',
+        heroTitle: 'Welcome to H.E-queen Store',
+        heroDesc: 'The best modern products at the highest quality and best prices.',
+        productsTitle: 'Available Products',
+        p1Title: 'Product No. 1',
+        p2Title: 'Product No. 2',
+        p3Title: 'Product No. 3',
+        pBtn: 'Add to Cart',
+        navHome: 'Home',
+        navProducts: 'Products',
+        navContact: 'Contact Us',
+        navAccount: 'Account',
+        accountTitle: 'Create Account / Login',
+        accountDesc: 'Sign in now to get the best exclusive offers',
+        googleBtnText: 'Sign in with Gmail',
+        contactTitle: 'Contact Us',
+        contactDesc: 'We are happy to assist you anytime via the following:'
+      }
+    };
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'ar' ? 'en' : 'ar';
+      const html = document.documentElement;
+      
+      html.setAttribute('lang', currentLang);
+      html.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+
+      const t = translations[currentLang];
+      
+      document.getElementById('langToggle').innerText = t.langBtn;
+      document.getElementById('heroTitle').innerText = t.heroTitle;
+      document.getElementById('heroDesc').innerText = t.heroDesc;
+      document.getElementById('productsTitle').innerText = t.productsTitle;
+      
+      document.getElementById('p1Title').innerText = t.p1Title;
+      document.getElementById('p2Title').innerText = t.p2Title;
+      document.getElementById('p3Title').innerText = t.p3Title;
+      
+      document.getElementById('p1Btn').innerText = t.pBtn;
+      document.getElementById('p2Btn').innerText = t.pBtn;
+      document.getElementById('p3Btn').innerText = t.pBtn;
+
+      document.getElementById('navHome').innerText = t.navHome;
+      document.getElementById('navProducts').innerText = t.navProducts;
+      document.getElementById('navContact').innerText = t.navContact;
+      document.getElementById('navAccount').innerText = t.navAccount;
+
+      document.getElementById('accountTitle').innerText = t.accountTitle;
+      document.getElementById('accountDesc').innerText = t.accountDesc;
+      document.getElementById('googleBtnText').innerText = t.googleBtnText;
+
+      document.getElementById('contactTitle').innerText = t.contactTitle;
+      document.getElementById('contactDesc').innerText = t.contactDesc;
+    }
+
+    function openModal(id) {
+      document.getElementById(id).style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+  </script>
+</body>
+</html>
+
